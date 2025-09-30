@@ -1,7 +1,7 @@
 // app.ts - intentionally broken TypeScript
 
 let username: string = 123; // ❌ Error: number assigned to string
-let password: string 45454retret;
+let password: string = 45454retret;
 function greet(name: string): string {
     return "Hello, " + name;
 }
