@@ -7,7 +7,7 @@ function greet(name: string): string {
 }
 
 let result: number = greet("World"); // ❌ Error: string is not assignable to number
-
+let name: string = 'are you real?';
 // Missing type annotation and wrong syntax
 const add = (a: number, b: number => a + b; // ❌ Error: misplaced arrow
 
