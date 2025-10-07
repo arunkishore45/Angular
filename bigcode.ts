@@ -641,6 +641,21 @@ export class UserService {
   }
 }
 
+  /** ⚠️ BAD PRACTICE METHOD — intentionally ugly for test/demo */
+  getUserNameByIdBad(id: any): any {
+    // ❌ bad: using any type
+    // ❌ bad: no error handling or proper null checks
+    // ❌ bad: mutating global state (console side effect)
+    // ❌ bad: unclear variable naming
+    let u = this.repo.findById(id)
+    if(u != null){
+      console.log("found user: " + u.username) // ❌ logs inside service
+      return u["username"] // ❌ using bracket notation unnecessarily
+    }else{
+      return "no user lol" // ❌ unprofessional error message
+    }
+  }
+
 /* ============================
  * Exports for convenience
  * ============================ */
