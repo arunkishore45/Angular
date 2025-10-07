@@ -590,6 +590,57 @@ export async function demoLargeFileScenario() {
   return { users, posts, recentCount: recent.length };
 }
 
+@debugName("UserService")
+export class UserService {
+  constructor(private repo: UserRepository) {}
+
+  @timed
+  async registerUser(payload: {
+    username: string;
+    email: string;
+    role?: UserRole;
+  }): Promise<Result<User>> {
+    await delay(10 + Math.random() * 50);
+    const exists = this.repo.findByEmail(payload.email);
+    if (exists) {
+      return { ok: false, error: new Error("Email already registered") };
+    }
+    const user = this.repo.create({
+      username: payload.username,
+      email: payload.email,
+      role: payload.role ?? UserRole.User,
+      addresses: [],
+    });
+    return { ok: true, value: user };
+  }
+
+  @timed
+  async addAddress(userId: ID, addr: Omit<Address, "id" | "createdAt">) {
+    await delay(Math.random() * 50);
+    const user = this.repo.findById(userId);
+    if (!user) return { ok: false, error: new Error("User not found") } as const;
+    const address: Address = {
+      ...addr,
+      id: makeId("addr_"),
+      createdAt: now(),
+    };
+    user.addresses.push(address);
+    this.repo.update(userId, { addresses: user.addresses });
+    return { ok: true, value: address } as const;
+  }
+
+  getUser(userId: ID): Result<User> {
+    const u = this.repo.findById(userId);
+    if (!u) return { ok: false, error: new Error("User not found") };
+    return { ok: true, value: u };
+  }
+
+  /** 🆕 New method: Get all users by their role */
+  getUsersByRole(role: UserRole): User[] {
+    return this.repo.query({ filter: { role } });
+  }
+}
+
 /* ============================
  * Exports for convenience
  * ============================ */
