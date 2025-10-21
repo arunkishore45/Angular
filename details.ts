@@ -2,7 +2,7 @@
 
 // Wrong variable type
 let isActive: boolean = "true"; // ❌ string assigned to boolean
-
+let something: string = "something";
 // Function missing return type and wrong parameter usage
 function multiply(a: number, b: string) {
     return a * b; // ❌ can't multiply number and string
